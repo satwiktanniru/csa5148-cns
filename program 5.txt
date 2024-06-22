@@ -1,0 +1,26 @@
+#include <stdio.h>
+#include <ctype.h>
+
+int main() {
+    int a = 17; // Key parameter 'a'
+    int b = 20; // Key parameter 'b'
+
+    char plaintext[100];
+    printf("Enter the plaintext: ");
+    fgets(plaintext, sizeof(plaintext), stdin);
+
+    // Encryption
+    for (int i = 0; plaintext[i] != '\0'; i++) {
+        char c = plaintext[i];
+        if (isalpha(c)) {
+            int base = islower(c) ? 'a' : 'A';
+            char encrypted = ((a * (c - base) + b) % 26) + base;
+            printf("%c", encrypted);
+        } else {
+            printf("%c", c); // Non-alphabetic characters remain unchanged
+        }
+    }
+
+    printf("\n");
+    return 0;
+}

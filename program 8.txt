@@ -1,0 +1,45 @@
+#include <stdio.h>
+#include <ctype.h>
+
+char monoalphabetic_encr(char);
+
+int main() {
+    char plaintext[100];
+    printf("Enter the plaintext: ");
+    fgets(plaintext, sizeof(plaintext), stdin);
+
+    // Encryption
+    for (int i = 0; plaintext[i] != '\0'; i++) {
+        char c = plaintext[i];
+        if (isalpha(c)) {
+            char encrypted = monoalphabetic_encr(tolower(c));
+            if (isupper(c)) {
+                encrypted = toupper(encrypted);
+            }
+            printf("%c", encrypted);
+        } else {
+            printf("%c", c); // Non-alphabetic characters remain unchanged
+        }
+    }
+
+    printf("\n");
+    return 0;
+}
+
+char monoalphabetic_encr(char a) {
+    char keyword[] = "CIPHER";
+    char unused[] = "FGJKLMNOQSTUVWXYZ";
+    int index;
+
+    if (isalpha(a)) {
+        if (islower(a)) {
+            index = a - 'a';
+            return keyword[index];
+        } else {
+            index = a - 'A';
+            return toupper(keyword[index]);
+        }
+    } else {
+        return a; // Return non-alphabetic characters unchanged
+    }
+}

@@ -1,0 +1,46 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+// Generate the Vigenère key based on the given keyword
+void generateVigenereKey(char keyword[], char vigenereKey[], int textLength) {
+    int keywordLength = strlen(keyword);
+    for (int i = 0; i < textLength; ++i) {
+        vigenereKey[i] = keyword[i % keywordLength];
+    }
+}
+
+// Encrypt the plaintext using the Vigenère key
+void vigenereEncrypt(char plaintext[], char keyword[], char ciphertext[]) {
+    int textLength = strlen(plaintext);
+    char vigenereKey[textLength];
+    generateVigenereKey(keyword, vigenereKey, textLength);
+
+    for (int i = 0; i < textLength; ++i) {
+        if (isalpha(plaintext[i])) {
+            char base = isupper(plaintext[i]) ? 'A' : 'a';
+            int shift = vigenereKey[i] - base;
+            ciphertext[i] = (plaintext[i] - base + shift) % 26 + base;
+        } else {
+            ciphertext[i] = plaintext[i]; // Preserve non-alphabetic characters
+        }
+    }
+}
+
+int main() {
+    char plaintext[100];
+    char keyword[100];
+    char ciphertext[100];
+
+    printf("Enter the plaintext: ");
+    scanf("%s", plaintext);
+
+    printf("Enter the keyword: ");
+    scanf("%s", keyword);
+
+    vigenereEncrypt(plaintext, keyword, ciphertext);
+
+    printf("Encrypted text: %s\n", ciphertext);
+
+    return 0;
+}

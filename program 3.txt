@@ -1,0 +1,78 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+// Generate the key square (5x5) based on the keyword
+void generateKeySquare(char key[], char keySquare[5][5]) {
+    // Initialize the key square with the unique letters from the key
+    int k = 0;
+    for (int i = 0; i < 5; ++i) {
+        for (int j = 0; j < 5; ++j) {
+            if (k < strlen(key)) {
+                keySquare[i][j] = toupper(key[k]);
+                ++k;
+            }
+        }
+    }
+}
+
+// Find the position of a letter in the key square
+void findPosition(char keySquare[5][5], char letter, int* row, int* col) {
+    for (int i = 0; i < 5; ++i) {
+        for (int j = 0; j < 5; ++j) {
+            if (keySquare[i][j] == letter) {
+                *row = i;
+                *col = j;
+                return;
+            }
+        }
+    }
+}
+
+// Encrypt a digraph using the key square
+void encryptDigraph(char keySquare[5][5], char digraph[2], char encrypted[2]) {
+    int row1, col1, row2, col2;
+    findPosition(keySquare, digraph[0], &row1, &col1);
+    findPosition(keySquare, digraph[1], &row2, &col2);
+
+    if (row1 == row2) {
+        encrypted[0] = keySquare[row1][(col1 + 1) % 5];
+        encrypted[1] = keySquare[row2][(col2 + 1) % 5];
+    } else if (col1 == col2) {
+        encrypted[0] = keySquare[(row1 + 1) % 5][col1];
+        encrypted[1] = keySquare[(row2 + 1) % 5][col2];
+    } else {
+        encrypted[0] = keySquare[row1][col2];
+        encrypted[1] = keySquare[row2][col1];
+    }
+}
+
+int main() {
+    char key[100];
+    char plaintext[100];
+    char keySquare[5][5];
+
+    printf("Enter the keyword (without repeating letters): ");
+    scanf("%s", key);
+
+    // Generate the key square
+    generateKeySquare(key, keySquare);
+
+    printf("Enter the plaintext (even length): ");
+    scanf("%s", plaintext);
+
+    // Ensure even length by adding a 'Z' if necessary
+    if (strlen(plaintext) % 2 != 0) {
+        strcat(plaintext, "Z");
+    }
+
+    // Encrypt the digraphs
+    for (int i = 0; i < strlen(plaintext); i += 2) {
+        char digraph[2] = {plaintext[i], plaintext[i + 1]};
+        char encrypted[2];
+        encryptDigraph(keySquare, digraph, encrypted);
+        printf("Encrypted: %c%c ", encrypted[0], encrypted[1]);
+    }
+
+    return 0;
+}

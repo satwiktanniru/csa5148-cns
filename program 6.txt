@@ -1,0 +1,26 @@
+#include <stdio.h>
+#include <ctype.h>
+
+int main() {
+    int a = 7; // Key parameter 'a'
+    int b = 23; // Key parameter 'b'
+
+    char ciphertext[100];
+    printf("Enter the ciphertext: ");
+    fgets(ciphertext, sizeof(ciphertext), stdin);
+
+    // Decryption
+    for (int i = 0; ciphertext[i] != '\0'; i++) {
+        char c = ciphertext[i];
+        if (isalpha(c)) {
+            int base = islower(c) ? 'a' : 'A';
+            char decrypted = ((a * (c - base - b) + 26) % 26) + base;
+            printf("%c", decrypted);
+        } else {
+            printf("%c", c); // Non-alphabetic characters remain unchanged
+        }
+    }
+
+    printf("\n");
+    return 0;
+}
